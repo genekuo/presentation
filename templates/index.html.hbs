@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <!--<link rel="apple-touch-icon" sizes="76x76" href="../img/apple-icon.png">-->
+  <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>
+    Presentations
+  </title>
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+  <!--     Fonts and icons     -->
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+  <!-- CSS Files -->
+  <link href="./css/material-kit.css?v=2.0.5" rel="stylesheet" />
+</head>
+
+<body>
+  <nav class="navbar navbar-inverse navbar-expand-lg bg-dark fixed-top" role="navigation-demo">
+    <div class="container">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-translate">
+        <a class="navbar-brand" href="#0">Presentations</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="navbar-toggler-icon"></span>
+          <span class="navbar-toggler-icon"></span>
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a href="#about" class="nav-link" data-toggle="modal" data-target="#about">
+              About
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" rel="tooltip" title="" data-placement="bottom" href="https://github.com/mattdark/reveal.js-gallery" target="_blank" data-original-title="Fork me!">
+              <i class="fa fa-github"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-->
+  </nav>
+  <div class="section secion-white">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="row">
+            <div class="col-lg-2">
+              <ul class="nav nav-pills nav-pills-icons flex-column" role="tablist">
+                <!--
+                                    color-classes: "nav-pills-primary", "nav-pills-info", "nav-pills-success", "nav-pills-warning","nav-pills-danger"
+                                -->
+                <li class="nav-item">
+                  <a class="nav-link active" href="#profile" role="tab" data-toggle="tab">
+                    <i class="material-icons">face</i> Profile
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#slides" role="tab" data-toggle="tab">
+                    <i class="material-icons">photo_library</i> Slides
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-lg-10">
+              <div class="tab-content">
+                <div class="tab-pane active" id="profile">
+                  <div class="row">
+                    {{ #each profile }}
+                      <div class="col-lg-5 profile-text">
+                        <h1>{{ name }}</h1>
+                        <p style="text-align: justify;">{{ bio }}
+                        </p>
+                        <div>
+                          <a target="_blank" href="https://facebook.com/{{ facebook }}" class="btn btn-info btn-round" data-toggle="tooltip" data-original-title="Facebook">
+                            <i class="fa fa-facebook"></i>
+                          </a>
+                          <a target="_blank" href="https://twitter.com/{{ twitter }}" class="btn btn-info btn-round" data-toggle="tooltip" data-original-title="Twitter">
+                            <i class="fa fa-twitter"></i>
+                          </a>
+                          <a target="_blank" href="https://linkedin.com/in/{{ linkedin }}" class="btn btn-info btn-round" data-toggle="tooltip" data-original-title="LinkedIn">
+                            <i class="fa fa-linkedin"></i>
+                          </a>
+                          <a target="_blank" href="https://www.github.com/{{ github }}" class="btn btn-info btn-round" data-toggle="tooltip" data-original-title="GitHub">
+                            <i class="fa fa-github"></i>
+                          </a>
+                        </div>
+                      </div>
+                      <div class="col-lg-5 ml-auto mr-auto">
+                        <img src="./img/{{ profile_picture }}" alt="Profile picture" class="img-raised rounded-circle img-fluid">
+                      </div>
+                    {{ /each }}
+                  </div>
+                </div>
+                <div class="tab-pane" id="slides">
+                  <div class="row">
+                    <div class="col-lg-8">
+                      <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner" role="listbox">
+                          <div class="carousel-item active">
+                            <img class="d-block" style="width: 100%;" id="slide_screenshot" src="./img/screenshot/cover.png" alt="Presentation Cover">
+                            <div class="carousel-caption d-none d-md-block">
+                              <h5></h5>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-4 slide-title">
+                      <p class="profile-description text-left">
+                        <div class="form-group">
+                          <form id="slides" action="/presentation" method="POST">
+                            <select name="path" id="inputState" class="form-control">
+                              <option value="" disabled selected>Choose...</option>
+                              {{ #each slides }}
+                                <option value="{{ url }}">{{ title }}</option>
+                              {{ /each }}
+                            </select>
+                            <div class="btn-wrapper pt-3">
+                              <button type="submit" class="btn btn-info">Open</button>
+                            </div>
+                          </form>
+                        </div>
+                        <script src="/js/script.js"></script>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Classic Modal -->
+  <div class="modal fade" id="about" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">reveal.js Gallery</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <i class="material-icons">clear</i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p><a href="https://revealjs.com/" target="_blank">reveal.js</a> is a framework for creating presentations using HTML. It's an alternative to Microsoft Powerpoint or LibreOffice Impress but using a text editor and any browser. reveal.js Gallery exists as a way to better organize and access all of your presentations from one place. Created using <a href="https://rust-lang.org/" target="_blank">Rust</a> & <a href="https://rocket.rs/" target="_blank">Rocket</a></a>. UI based on <a href="https://www.creative-tim.com/product/material-kit" target="_blank">Material Kit</a> by <a href="https://www.creative-tim.com/" target="_blank">Creative Time</a>.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger btn-link" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--  End Modal -->
+
+  <!--   Core JS Files   -->
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
+  <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"></script>
+  <!--<script src="./js/plugins/moment.min.js"></script>-->
+  <!--	Plugin for the Datepicker, full documentation here: https://github.com/Eonasdan/bootstrap-datetimepicker -->
+  <!--<script src="./js/plugins/bootstrap-datetimepicker.js" type="text/javascript"></script>-->
+  <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
+  <!--<script src="./js/plugins/nouislider.min.js" type="text/javascript"></script>-->
+  <!--  Google Maps Plugin    -->
+  <!--<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>-->
+  <!-- Control Center for Material Kit: parallax effects, scripts for the example pages etc -->
+  <script src="./js/material-kit.js?v=2.0.5" type="text/javascript"></script>
+</body>
+
+</html>
