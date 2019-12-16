@@ -2,6 +2,302 @@
 
 ---
 
+## `Functional Programming`
+* Functional programming is the art of composing functions to advance the state of a program in a pure manner
+* Higer-order functions, composition, pure functions
+* Functions as data
+  - declare a constant value
+  - identity function
+  - create new objects
+  - declare and reference (later) variables in different scope: closure
+  - Arbitrary business logic
+
+---
+
+## `FP Rules`
+* always input and return values
+* Immutability
+* side-effect free
+* The same input always produces the same output
+
+* So, FP is the art of combining functions that play by these rules to advance the state of a program to its final outcome
+
+---
+
+## `Function composition`
+
+---
+
+## `Curried functions`
+<section>
+	<pre><code data-trim data-noescape>
+const curry =
+  fn =>
+    (...args1) =>
+      args1.length === fn.length
+        ? fn(...args1)
+        : (...args2) => {
+          const args = [...args1, ...args2]
+          return args.length >= fn.length ? fn(...args) : curry(fn)(...args)
+        }
+  </code></pre>
+</section>
+
+---
+
+## `prop and props`
+<section>
+	<pre><code data-trim data-noescape>
+const isFunction =
+  a =>
+    a &&
+    typeof a === 'function' &&
+    Object.prototype.toString.call(a) === '[object Function]'
+
+const prop =
+  curry(
+    (name, obj) =>
+      obj[name] && isFunction(obj[name]) ?
+        obj[name].call(obj) : obj[name]
+  )
+const props =
+  curry(
+    (name, obj) =>
+      names.map(n => prop(n, obj))
+  )
+  </code></pre>
+</section>
+
+---
+
+## `The order of arguments`
+<section>
+	<pre><code data-trim data-noescape>
+const tx = {
+  sender: 'a@b.com',
+  recipient: 'c@d.com',
+  funds: 10.8
+}
+
+const fundsOf = prop('funds')
+fundsOf(tx)
+  </code></pre>
+</section>
+
+---
+
+## `Curried and composition`
+<section>
+	<pre><code data-trim data-noescape>
+const HasHash =
+  () => ({
+    calculateHash() {
+      return
+        compose(
+          computeCipher,
+          assemble
+        )(this)
+    }
+  })
+  const computeCipher =
+    (data, i = 0, hash = 0) =>
+      i > data.length
+        ? hash ** 2
+        : computeCipher(
+            data,
+            i + 1,
+            ((hash << 5)) - hash + data.charCodeAt(i)
+          )
+  const assemble =
+    ({sender, recipient, funds}) =>
+      [sender, recipient, funds].join('')
+  </code></pre>
+</section>
+
+---
+
+## `Generalize assemble`
+<section>
+	<pre><code data-trim data-noescape>
+const assemble =
+  (...pieces) =>
+    pieces.map(JSON.stringify).join('')
+const keys = ['sender', 'recipient', 'funds']
+const transaction = {
+  sender: 'a@b.com',
+  recipient: 'c@d.com',
+  funds: 10.8
+}
+
+assemble(keys.map(k => transaction[k]))
+  </code></pre>
+</section>
+
+---
+
+## `Applying curry`
+<section>
+	<pre><code data-trim data-noescape>
+const computeCipher =
+  curry(
+    (options, data) =>
+      crypto
+        .createHash(options.algorithm)
+        .update(data)
+        .digest(options.encoding)
+  )
+compose(
+  computeCipher({
+    algorithm: 'SHA256',
+    encoding: 'hex'
+    }),
+  assemble)
+  </code></pre>
+</section>
+
+---
+
+## `HasHash`
+<section>
+	<pre><code data-trim data-noescape>
+const HasHash = (
+  keys,
+  options = {
+    algorithm: 'SHA256',
+    encoding: 'hex'
+  }
+) => ({
+    calculateHash() {
+      return compose(
+        computeCipher(options),
+        assemble.
+        props(keys)
+        )(this)
+    }
+  })
+  </code></pre>
+</section>
+
+---
+
+## `HasTransaction`
+<section>
+	<pre><code data-trim data-noescape>
+const hasTransaction = Object.assign(
+    {
+      sender: 'a@b.com',
+      recipient: 'c@d.com',
+      funds: 10.8
+    },
+    HasHash(['sneder', 'recipient', 'funds'])
+  )
+
+hasTransaction.calculateHash()
+  </code></pre>
+</section>
+
+---
+
+## `Pass a copy of data`
+<section>
+	<pre><code data-trim data-noescape>
+calculateHash() {
+  const objToHash = Object.fromEntries(
+    new Map(keys.map(k => [k, prop(k, this)]))
+    )
+  return compose(
+    computeCipher(options),
+    assemble,
+    props(keys)
+    )(objToHash)
+}
+
+foo({...data})
+foo([...data])
+  </code></pre>
+</section>
+
+---
+
+## `Immutable object`
+* No global identity
+* Closed to modification
+* Closed to extension
+* Define its own equality
+
+---
+
+## `Money curried`
+<section>
+	<pre><code data-trim data-noescape>
+const USD = Money('$')
+USD(3.0)
+USD(3.0).amount
+USD(7.0).currency
+[USD(3.0), USD(7.0)].map(prop('amount')).reduce(add, 0)
+USD(3.0).plus(USD(7.0)).equals(USD(10))
+  </code></pre>
+</section>
+
+---
+
+## `Money`
+<section>
+	<pre><code data-trim data-noescape>
+const JS_LITE = 'jsl'
+const US_DOLLAR = '$'
+const Money =
+  curry((currency, amount) =>
+    compose(
+      Object.seal,
+      Object.freeze
+    )({
+        amount,
+        currency,
+        constructor: Money,
+        equals: other =>
+          Object.is(currency, other.currency) &&
+          Object.is(amount, other.amount),
+        round: (precision = 2) =>
+          Money(currency, precisionRound(amount, precision))
+        minus: m => Money(currency, amount - m.amount),
+        plus: m => Money(currency, amount + m.amount),
+        times: m => Money(currency, amount * m.amount),
+        compareTo: other => amount - other.amount
+        asNegative: () => Money(currency, amount * -1),
+        toString: () => `${currency} ${amount}`
+      })
+  )
+  </code></pre>
+</section>
+
+---
+
+## `Static helpers`
+<section>
+	<pre><code data-trim data-noescape>
+Money.zero =
+  (currency = JS_LITE) =>
+    Money(currency, 0)
+Money.sum =
+  (m1, mm2) =>
+    ma.plus(m2)
+Money.subtract =
+  (m1, m2) =>
+    m1.minus(m2)
+Money.multiply =
+  (m1, m2) =>
+    m1.times(m2)
+  </code></pre>
+</section>
+
+---
+
+## `Point free`
+
+
+---
+
 ## `Higher-kinded composition`
 
 ---
@@ -36,9 +332,9 @@ compose(...[f3,f2,f1].map(validate))
 ## `Closed context`
 * An object that encapsulates data and abstracts the application of an effect to this data as part of exercising business logic.
 * API
-** A static function to construct new containers with a value
-** A function to transform this data
-** A function to extract the end result from the container
+  - A static function to construct new containers with a value
+  - A function to transform this data
+  - A function to extract the end result from the container
 * Id and []
 
 ---
@@ -151,6 +447,9 @@ unique.map(join).map(toUpper)('aabbcc')
 ## `Higher-kinded composition`
 * flatMap allows composite types to compose functions returning other composites, a higher-kinded (nested) form of composition
 
+---
+
+## `Higher-kinded composition`
 <section>
 	<pre><code data-trim data-noescape>
 const flat =
@@ -228,6 +527,9 @@ class Id {
 ## `Functor mixin`
 * functors let you map a simple function to transform the wrapped value and put it back into a new container of the same type
 
+---
+
+## `Functor mixin`
 <section>
 	<pre><code data-trim data-noescape>
 const Functor =

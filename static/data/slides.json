@@ -19,12 +19,12 @@
         },
         {
             "id": "3",
-            "file": "terraform.md",
-            "title": "Terraform",
-            "description": "Terraform",
+            "file": "javascript.md",
+            "title": "JavaScript",
+            "description": "JavaScript",
             "theme": "black.css",
-            "url": "terraform",
-	          "screenshot": "/img/screenshot/terrform.png"
+            "url": "javascript",
+	          "screenshot": "/img/screenshot/javascript.png"
         },
         {
             "id": "3",
