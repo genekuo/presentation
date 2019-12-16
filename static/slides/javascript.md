@@ -294,30 +294,111 @@ Money.multiply =
 ---
 
 ## `Point free`
+* a style or technique in which function definitions do not explicitly identify the arguments (or the “points”) they receive
 
+<section>
+	<pre><code data-trim data-noescape>
+const countWordsInFile = compose(
+  count,
+  split,
+  decode('utf8'),
+  read
+)
+const countWords = compose2(count, split)
+const countWordsInFile = compose2(
+  countWords,
+  compose2(decode('utf8'), read)
+)
+const countBlocksInFile = compose(
+  count,
+  JSON.parse,
+  decode('utf8'),
+  read
+)
+  </code></pre>
+</section>
+
+---
+
+## `Functional transformation`
+* Make the data explicit function arguments instead of `this`
+* Transform loops and nested conditionals into unidirectional data transformation: map and filter
+* Improve addition using variable reassignment: reduce
+
+---
+
+## `Calculate balance`
+<section>
+	<pre><code data-trim data-noescape>
+const balanceOf =
+  curry((addr, tx)) =>
+    Money.sum(
+      tx.recipient === addr ? tx.funds : Money.zero(),
+      tx.sender === addr ? tx.funds.asNegative() : Money.zero()
+    )
+  )
+computeBalance(ledger, address) {
+  return Array.from(ledger)
+    .filter(not(prop('isGenesis')))
+    .map(prop('data'))
+    .flat()
+    .map(balanceOf(address))
+    .reduce(Money.sum, Money.zero())
+    .round()
+}
+  </code></pre>
+</section>
+
+---
+
+## `Extract instance methods into functions: Array.prototype.map(f)`
+<section>
+	<pre><code data-trim data-noescape>
+const map = curry((f, arr) => arr.map(f))
+map(balanceOf(address))
+
+const computeBalance =
+  address =>
+    compose(
+      Money.round,
+      reduce(Money.sum, Money.zero()),
+      map(balanceOf(address)),
+      flatMap(prop('data')),
+      filter(
+        compose(
+          not,
+          prop('isGenesis')
+        )
+      ),
+      Array.from
+    )
+  </code></pre>
+</section>
+
+---
+
+## `Function binding`
+
+---
+
+## `Pipelining`
 
 ---
 
 ## `Higher-kinded composition`
+* wrapping the context over which a function executes. This context centrally handles things like validation or error handling, while keeping our code fluent, compact, and declarative.
+* An Algebraic Data Type (ADT) is a composite type that encapsulates a single concern like validation, error handling, null checking, sequence of elements, and others.
+* ADT allows building complete programs from simple, individual patterns
+* ADT universal API: Functor (map) and Monad (flatMap)
+* Repetitive validation logic, context-aware, no side effects
 
 ---
 
-## `Validation`
-* Repetitive validation logic
-* Context lost
-* Side effects
-
----
-
-## `Algebraic Data Structure`
-* build complete programs from simple, individual patterns
-* Functor and Monad
-
----
-
-## `Context`
+## `Validate-aware functions`
 <section>
 	<pre><code data-trim data-noescape>
+compose(validate, f3, validate, f2, validate, f1, validate)
+
 const validate =
   fn =>
     data =>
@@ -329,17 +410,17 @@ compose(...[f3,f2,f1].map(validate))
 
 ---
 
-## `Closed context`
-* An object that encapsulates data and abstracts the application of an effect to this data as part of exercising business logic.
-* API
-  - A static function to construct new containers with a value
-  - A function to transform this data
-  - A function to extract the end result from the container
+## `Closed context (container)`
+* An object that encapsulates data and abstracts the application of an (side)effect to this data as part of exercising business logic.
+* minimal APIs
+  - A static function (type lifting function) to construct new containers with a value: c.of, c.unit
+  - A function to transform this data: C.prototype.map
+  - A function to extract the end result from the container (unfolding or reducing)
 * Id and []
 
 ---
 
-## `Array`
+## `Container: Array`
 <section>
 	<pre><code data-trim data-noescape>
 const unique =
@@ -352,17 +433,19 @@ const toUpper =
   str =>
     str.toUpperCase()
 
-const letters = ['aabbcc'] // Or Array.of('aabbcc')
+const letters = ['aabbcc'] // Or Array.of('aabbcc'), put the value insdie an array
   .map(unique)
   .map(join)
   .map(toUpper)
-  .pop()
+  .pop()  // extract a value from an array
   </code></pre>
 </section>
 
 ---
 
 ## `Identity context`
+* an identity context wraps a single value and doesn’t do any additional processing over what you provide in your mapping functions—it has no effect on the data.
+
 <section>
 	<pre><code data-trim data-noescape>
 const identity =
@@ -396,13 +479,25 @@ Id.of('aabbcc')
 
 ---
 
-## `Contextual composition`
+## `Contextual composition: map, flatMap`
 * Composing functions together over the underlying array context.
+
+<section>
+	<pre><code data-trim data-noescape>
+const uniqueUpperCaseOf =
+  compose(
+    toUpper,
+    join,
+    unique
+  )
+uniqueUpperCaseOf('aabbcc')
+  </code></pre>
+</section>
 
 ---
 
 ## `Data types`
-* boolean, number, string, undefined, null, Symbol, Object
+* Seven data types: boolean, number, string, undefined, null, Symbol, Object
 * Boxing
 * Coercion
 
