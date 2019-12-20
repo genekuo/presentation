@@ -1,8 +1,8 @@
-# Functional Programming
+# `Functional Programming`
 
 ---
 
-## Function manipulation
+## `Function manipulation`
 <section>
 	<pre><code data-trim data-noescape>
 function unary(fn) {
@@ -22,7 +22,7 @@ var unary =
 
 ---
 
-## Identity function
+## `Identity function`
 * Coercion, default function as argument
 
 <section>
@@ -42,7 +42,7 @@ var identity =
 
 ---
 
-## Constant function
+## `Constant function`
 * Represent value as a function as to send to other function expecting functions
 
 <section>
@@ -62,7 +62,7 @@ var constant =
 
 ---
 
-## Adapt a function's signature
+## `Adapt a function's signature`
 <section>
 	<pre><code data-trim data-noescape>
 function foo(x,y){
@@ -77,7 +77,7 @@ bar(foo)
 
 ---
 
-## Spread arguments
+## `Spread arguments`
 <section>
 	<pre><code data-trim data-noescape>
 function spreadArgs(fn) {
@@ -97,7 +97,7 @@ bar(spreadArgs(foo))
 
 ---
 
-## Gather arguments
+## `Gather arguments`
 <section>
 	<pre><code data-trim data-noescape>
 function gatherArgs(fn) {
@@ -120,12 +120,11 @@ function combine([v1, v2]) {
 
 ---
 
-## Preset arguments
-
+## `Preset arguments`
 
 ---
 
-## Function composition
+## `Function composition`
 <section>
 	<pre><code data-trim data-noescape>
 function compose(...fns) {
@@ -152,7 +151,7 @@ var compose =
 
 ---
 
-## Functions
+## `Functions`
 <section>
 	<pre><code data-trim data-noescape>
 function words(str) {
@@ -180,7 +179,7 @@ var wordsUsed = compose(unique, words)
 
 ---
 
-## Recursion
+## `Recursion`
 * Direct recursion, binary recursion, mutual recursion
 * Implicitly track state via `return` of call stacks
 * Declarative vs. imperative
@@ -198,7 +197,7 @@ function sum(num1,...nums){
 
 ---
 
-## maxEven
+## `maxEven`
 <section>
 	<pre><code data-trim data-noescape>
 function maxEven(num1,...restNums){
@@ -215,7 +214,7 @@ function maxEven(num1,...restNums){
 
 ---
 
-## Binary tree
+## `Binary tree`
 <section>
 	<pre><code data-trim data-noescape>
 depth(node):
@@ -234,7 +233,7 @@ function depth(node) {
 
 ---
 
-## Tail calls
+## `Tail calls`
 * Stack frames
 * isOdd/isEven
 * Tail Call Optimization (TCO)
@@ -242,7 +241,7 @@ function depth(node) {
 
 ---
 
-## Refactor to tail calls
+## `Refactor to tail calls`
 <section>
 	<pre><code data-trim data-noescape>
 "use strict"
@@ -274,7 +273,7 @@ function sum(num1,num2,...nums) {    
 
 ---
 
-## Methods of Array prototype
+## `Methods of Array prototype`
 * With imperative code, each intermediate result in a set of calculations is stored in variable(s) through assignment
 * `forEach()`, `some()` , `every()`
 
@@ -303,7 +302,7 @@ function unary(fn) {
 
 ---
 
-## Transform functions
+## `Transform functions`
 * Independent transformation
 * Eager operations vs, lazy operations
 * Mapper without side effects
@@ -329,12 +328,12 @@ var double = v => 2 * v
 
 ---
 
-## Functors
+## `Functors`
 * A functor is a value (array) that has a utility (map()) for using an operator function (mapper) on that value, which preserves composition (returns new array)
 
 ---
 
-## string functor
+## `string functor`
 <section>
 	<pre><code data-trim data-noescape>
 function uppercaseLetter(c) {
@@ -359,7 +358,7 @@ stringMap(uppercaseLetter, 'Hello World!')
 
 ---
 
-## Implementation
+## `Implementation`
 <section>
 	<pre><code data-trim data-noescape>
 function filter(predicateFn,arr) {
@@ -379,7 +378,7 @@ var isOdd = v => v % 2 == 1
 
 ---
 
-## Point free
+## `Point free`
 <section>
 	<pre><code data-trim data-noescape>
 function not(predicate) {
@@ -396,7 +395,7 @@ var isEven = not(isOdd)
 
 ---
 
-## FilterIn and filterOut
+## `FilterIn and filterOut`
 <section>
 	<pre><code data-trim data-noescape>
 var filterIn = filter
@@ -630,7 +629,7 @@ mergeLists([1,3,5,7,9], [2,4,6,8,10])
 
 ---
 
-## Transducing
+## `Transducing`
 * Transforming with reduction
 
 <section>

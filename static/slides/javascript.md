@@ -351,7 +351,7 @@ computeBalance(ledger, address) {
 
 ---
 
-## `Extract instance methods into functions: Array.prototype.map(f)`
+## `Extract methods`
 <section>
 	<pre><code data-trim data-noescape>
 const map = curry((f, arr) => arr.map(f))
@@ -481,7 +481,7 @@ Id.of('aabbcc')
 
 ## `Contextual composition: map, flatMap`
 * Composing functions together over the underlying array context.
-
+</br>
 <section>
 	<pre><code data-trim data-noescape>
 const uniqueUpperCaseOf =
@@ -504,9 +504,13 @@ uniqueUpperCaseOf('aabbcc')
 ---
 
 ## `flat, flatMap`
+* map allows you to apply functions from one value to another non-array value
 * flatMap allows you to apply functions from a value to another structure
 * Contextual composition
 
+---
+
+## `flat, flatMap`
 <section>
 	<pre><code data-trim data-noescape>
 ['aa',['bb'],['cc']].flat().map(toUpper)
@@ -540,6 +544,7 @@ unique.map(join).map(toUpper)('aabbcc')
 ---
 
 ## `Higher-kinded composition`
+* map allows objects (like Id and others) to compose functions
 * flatMap allows composite types to compose functions returning other composites, a higher-kinded (nested) form of composition
 
 ---
@@ -564,15 +569,18 @@ toUpper.flatMap(unique)('aa')
 ---
 
 ## `Structure preserving`
-* Symbol.species: species preserving
+* Symbol.species: species preserving, the type structure that is to be returned. Protocol or interface for map
+* functor and monad interfaces
 * map and flatMap
 
 ---
 
 ## `Functor`
 * A functor is something (e.g. an object) that can be mapped over or that implements the map interface properly
-* Identity: mapping the identity function over a container yields an equivalent container
-* Composition: mapping the composition of two functions f after g is equivalent to mapping g first and then f
+* Two rules:
+  - Identity: mapping the identity function over a container yields an equivalent container
+  - Composition: mapping the composition of two functions f after g is equivalent to mapping g first and then f
+* Two components of a functor: a map interface and two rules
 
 ---
 
