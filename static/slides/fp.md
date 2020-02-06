@@ -2,6 +2,97 @@
 
 ---
 
+## `Explicit return and implicit return`
+
+---
+
+## `Higher-order function`
+* A function that received or returns other function values
+
+---
+
+## `Example`
+<section>
+	<pre><code data-trim data-noescape>
+function forEach(list, fn) {
+	for (let v of list) {
+		fn(v)
+	}
+}
+forEach([1,2,3,4,5], function each(val) {
+	console.log(val)
+})
+
+function foo() {
+	return function inner(msg) {
+		return msg.toUpperCase()
+	}
+}
+var f = foo
+f('Hello')
+  </code></pre>
+</section>
+
+---
+
+## `Closure`
+* When an inner function makes reference to a variable from the outer function
+* In this case, the function remembers and accesses variables from outside of its own scope, even when that function is executed in a different scope
+
+---
+
+`Example`
+<section>
+	<pre><code data-trim data-noescape>
+function person(name) {
+	return function identify() {
+		console.log(`I am ${name}`)
+	}
+}
+var john = person('John')
+john()
+
+function runningCounter(start) {
+	var val = start
+	return function current(increment = 1) {
+		val = val + increment
+		return val
+	}
+}
+var score = runningCounter(0)
+score()
+score()
+score(13)
+  </code></pre>
+</section>
+
+---
+
+## `Remember function values`
+<section>
+	<pre><code data-trim data-noescape>
+function formatter(formatFn) {
+	return function inner(str) {
+		return formatFn(str)
+	}
+}
+var lower = formatter(
+	function formatting(v) {
+		return v.toLowerCase()
+	}
+)
+var upperFirst = formatter(
+	function formatting(v) {
+		return v[0].toUpperCase() + v.substr(1).toLowerCase()
+	}
+)
+lower('HELLO')
+upperFirst('hello')
+  </code></pre>
+</section>
+
+---
+
 ## `Function manipulation`
 <section>
 	<pre><code data-trim data-noescape>
@@ -120,7 +211,26 @@ function combine([v1, v2]) {
 
 ---
 
-## `Preset arguments`
+## `Partial application`
+* A reduction in a function's arity
+
+---
+
+## `Partial appled function`
+<section>
+	<pre><code data-trim data-noescape>
+	function partial(fn, presetArgs) {
+		return function partialApplied(...laterArgs) {
+			return fn(...presetArgs, ...laterArgs)
+		}
+	}
+
+	var partial =
+		(fn, presetArgs) =>
+			(...laterArgs) =>
+				fn(...presetArgs, ...laterArgs)
+  </code></pre>
+</section>
 
 ---
 
