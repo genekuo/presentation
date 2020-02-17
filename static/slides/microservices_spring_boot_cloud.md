@@ -7,6 +7,11 @@
 ---
 
 ## `Spring Boot`
+* Convention over configuration
+* Fat jars
+* `@SpringBootApplication` and `@ComponentScan`
+* `@Component` and `@Autowired`
+* `@Configuration` and `@Bean`
 
 ---
 
@@ -26,7 +31,7 @@
 ---
 
 ## `Spring Data`
-* Relational DB, NoSQL database, key-value database, graph batabase
+* Relational DB, NoSQL database, key-value database, graph database
 * Entities and repositories
 * `CrudRepository`, `ReactiveCrudRepository`
 * `Mono`, `Flux` objects

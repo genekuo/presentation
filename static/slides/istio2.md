@@ -1,9 +1,23 @@
 # `Service Mesh with Istio`
+ref.: https://medium.com/google-cloud/back-to-microservices-with-istio-p1-827c872daa53
+
+---
+
+## `Service Mesh`
+* An infrastructure layer that controls and observes the communication between services
+* Enbables observability, security, policy enforcement, resilience, traffic management for microservices
+
+![Sample image](../img/istio/service_mesh.png)
 
 ---
 
 ## `Istio Architecture`
-* Data Plane and Control Plane
+* Data Plane
+  - Envoy Proxy: injected sidecar container
+* Control Plane
+  - Pilot: supplies all sidecars with updates of the service mesh config.
+  - Mixer: enforces network policies and collects telemetry info to Prometheus
+  - Citadel: issues and rotates internal certificates
 
 ---
 
@@ -17,9 +31,23 @@
 
 ---
 
-## `Installing Istio`
+## `Prerequisites`
 * Resources req.: 4vCPU, 8GB RAM
+* Minikube version 1.2 or later
+* kubectl version 1.15 or later
+* VirtualBox version 6.0 or later
+<section>
+	<pre><code data-trim data-noescape>
+brew install kubectl
+brew cask install minikube
+brew cask install virtualbox
+brew link --overwrite kubernetes-cli
+</code></pre>
+</section>
 
+---
+
+## `Installing Istio`
 <section>
 	<pre><code data-trim data-noescape>
 minikube start --memory=5120
@@ -28,8 +56,10 @@ eval $(minikube docker-env)
 cd istio_install
 kubectl apply -f 1-istio-init.yaml
 kubectl get po -n istio-system
+
 kubectl apply -f 2-istio-minikube-reduced.yaml
 kubectl get po -n istio-system
+
 kubectl apply -f 3-kiali-secret.yaml
   </code></pre>
 </section>
@@ -40,6 +70,7 @@ kubectl apply -f 3-kiali-secret.yaml
 <section>
 	<pre><code data-trim data-noescape>
 minikube tunnel // run with another command prompt
+
 EXTERNAL_IP=$(kubectl -n istio-system get service istio-ingressgateway -o    
   jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo "$EXTERNAL_IP minikube.me" | sudo tee -a /etc/hosts
@@ -50,10 +81,10 @@ cat /etc/hosts
 ---
 
 ## `Application Architecture`
-* SA-Frontend service: Serves the frontend Reactjs application.
-* SA-WebApp service: Handles requests for Sentiment Analysis.
-* SA-Logic service: Performs sentiment analysis.
-* SA-Feedback service: Receives feedbacks from the users about the accuracy of the analysis.
+* SA-Frontend service: serves the frontend Reactjs application.
+* SA-WebApp service: handles requests for Sentiment Analysis.
+* SA-Logic service: performs sentiment analysis.
+* SA-Feedback service: receives feedbacks from the users about the accuracy of the analysis.
 
 ---
 
@@ -86,6 +117,7 @@ kubectl get po
 <section>
 	<pre><code data-trim data-noescape>
 minikube tunnel
+
 EXTERNAL_IP=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 echo "$EXTERNAL_IP minikube.me" | sudo tee -a /etc/hosts
 cat /etc/hosts
@@ -216,6 +248,7 @@ http://localhost:16686
 <section>
 <pre><code data-trim data-noescape>
 kubectl apply -f resource-manifests/kube/ab-testing/sa-frontend-green-deployment.yaml
+
 curl --silent http://$EXTERNAL_IP/ | tr '"' '\n' | grep main
 curl --silent http://$EXTERNAL_IP/ | tr '"' '\n' | grep main
 </code></pre>
@@ -313,10 +346,10 @@ while true; do \
 
 ## `Configuring and Testing`
 * Check the Grafana Incoming Success Rate for sa-web-app.default
+
 <section>
 <pre><code data-trim data-noescape>
 kubectl apply -f resource-manifests/istio/retries/sa-logic-retries-timeouts-vs.yaml
-
 kubectl delete deployment sa-logic-buggy
 kubectl delete virtualservice sa-logic
 </code></pre>

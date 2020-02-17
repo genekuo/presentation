@@ -51,6 +51,6 @@
             "description": "Service Mesh with Istio",
             "theme": "black.css",
             "url": "istio",
-	          "screenshot": ""
+	          "screenshot": "/img/screenshot/istio.png"
         }
 ]
