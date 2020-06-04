@@ -1,13 +1,215 @@
 # `Functional Programming`
+Gene Kuo
+
+---
+
+## `Parameters and Arguments`
+* Arguments are the values you pass in, and parameters are the named variables inside the function that receive those passed-in values.
+* Default parameters
+* Arity
+
+---
+
+## `Examples`
+<section>
+	<pre><code data-trim data-noescape>
+function foo(x,y,z) {    
+	// ..
+}
+foo.length;             // 3
+</code></pre>
+</section>
+
+---
+
+## `Examples`
+<section>
+	<pre><code data-trim data-noescape>
+function foo(x,y = 2) {    
+  // ..
+}
+function bar(x,...args) {    
+  // ..
+}
+function baz( {a,b} ) {    
+  // ..
+}
+foo.length;             // 1
+bar.length;             // 1
+baz.length;             // 1
+</code></pre>
+</section>
+
+---
+
+## `Examples`
+<section>
+	<pre><code data-trim data-noescape>
+function foo(x,y,z) {    
+  console.log( arguments.length );
+}
+foo( 3, 4 );    // 2
+</code></pre>
+</section>
+
+---
+
+## `Spread and gather`
+* Access the arguments in a positional array-like way
+
+---
+
+## `Examples`
+<section>
+	<pre><code data-trim data-noescape>
+function foo(x,y,z,...args) {    
+  console.log( x, y, z, args );
+}
+foo();                  // undefined undefined undefined []
+foo( 1, 2, 3 );         // 1 2 3 []
+foo( 1, 2, 3, 4 );      // 1 2 3 [ 4 ]
+foo( 1, 2, 3, 4, 5 );   // 1 2 3 [ 4, 5 ]
+</code></pre>
+</section>
+
+---
+
+## `Examples`
+<section>
+	<pre><code data-trim data-noescape>
+function foo(...args) {    
+	console.log( args[3] );
+}
+var arr = [ 2 ];
+foo( 1, ...arr, 3, ...[4,5] );      // 4
+</code></pre>
+</section>
+
+---
+
+## `Parameter destructuring`
+* Declare a pattern for the structure (object, array, etc.) that you expect, and indicate  decomposition (assignment) of its individual parts
+* JavaScript doesn’t have named arguments, but parameter object destructuring can be used.
+
+---
+
+## `Examples`
+<section>
+	<pre><code data-trim data-noescape>
+function foo( [x,y,...args] = [] ) {    
+  // ..
+}
+foo( [1,2,3] );
+</code></pre>
+</section>
+
+---
+
+## `Examples`
+<section>
+	<pre><code data-trim data-noescape>
+	function foo( {x,y} = {} ) {    
+	  console.log( x, y );
+	}
+	foo( {    
+		y: 3
+	} ); 
+</code></pre>
+</section>
+
+---
+
+## `Returning values`
+* In JavaScript, functions always return a value
+* Return multiple values
+
+---
+
+## `Examples`
+<section>
+	<pre><code data-trim data-noescape>
+function foo() {}
+function bar() {    
+  return;
+}
+function baz() {    
+  return undefined;
+}
+</code></pre>
+</section>
+
+---
+
+## `Examples`
+<section>
+	<pre><code data-trim data-noescape>
+function foo() {    
+  var retValue1 = 11;    
+  var retValue2 = 31;    
+  return [ retValue1, retValue2 ];
+}
+
+var [ x, y ] = foo();
+console.log( x + y );           // 42
+</code></pre>
+</section>
 
 ---
 
 ## `Explicit return and implicit return`
+* Implicit return: A function output some or all of its values by changing variables outside itself
+* Side-effects
+
+---
+
+## `Examples`
+<section>
+	<pre><code data-trim data-noescape>
+var y;
+function f(x) {    
+  y = (2 * Math.pow( x, 2 )) + 3;
+}
+f( 2 );
+y;   // 11
+</code></pre>
+</section>
+
+---
+
+## `Examples`
+<section>
+	<pre><code data-trim data-noescape>
+function f(x) {    
+  return (2 * Math.pow( x, 2 )) + 3;
+}    
+
+var y = f( 2 );
+y;                      // 11
+</code></pre>
+</section>
+
+---
+
+## `Examples`
+<section>
+	<pre><code data-trim data-noescape>
+function sum(list) {    
+  var total = 0;    
+  for (let i = 0; i < list.length; i++) {        
+    if (!list[i]) list[i] = 0;        
+    total = total + list[i];    
+  }    
+  return total;
+}
+var nums = [ 1, 3, 9, 27, , 84 ];
+sum( nums );            // 124
+</code></pre>
+</section>
 
 ---
 
 ## `Higher-order function`
-* A function that received or returns other function values
+* A function that receives or returns other function values
 
 ---
 
@@ -21,15 +223,15 @@ function forEach(list, fn) {
 }
 forEach([1,2,3,4,5], function each(val) {
 	console.log(val)
-})
+});
 
 function foo() {
 	return function inner(msg) {
 		return msg.toUpperCase()
 	}
 }
-var f = foo
-f('Hello')
+var f = foo();
+f('Hello');
   </code></pre>
 </section>
 
@@ -38,10 +240,11 @@ f('Hello')
 ## `Closure`
 * When an inner function makes reference to a variable from the outer function
 * In this case, the function remembers and accesses variables from outside of its own scope, even when that function is executed in a different scope
+* Can remember function values via closure
 
 ---
 
-`Example`
+## `Example`
 <section>
 	<pre><code data-trim data-noescape>
 function person(name) {
@@ -49,8 +252,8 @@ function person(name) {
 		console.log(`I am ${name}`)
 	}
 }
-var john = person('John')
-john()
+var john = person('John');
+john();		// I am John
 
 function runningCounter(start) {
 	var val = start
@@ -59,10 +262,10 @@ function runningCounter(start) {
 		return val
 	}
 }
-var score = runningCounter(0)
-score()
-score()
-score(13)
+var score = runningCounter(0);
+score();		// 1
+score();		// 2
+score(13);  // 15
   </code></pre>
 </section>
 
@@ -93,6 +296,52 @@ upperFirst('hello')
 
 ---
 
+## `Anonymous function`
+<section>
+	<pre><code data-trim data-noescape>
+function foo(fn) {    
+	 console.log( fn.name );
+}
+var x = function(){};
+foo( x );               // x
+foo( function(){} );    //
+</code></pre>
+</section>
+
+---
+
+## `Recursion self-reference`
+<section>
+	<pre><code data-trim data-noescape>
+function findPropIn(propName,obj) {    
+  if (obj == undefined || typeof obj != "object") return;    
+  if (propName in obj) {        
+    return obj[propName];    
+  }  else {        
+    for (let prop of Object.keys( obj )) {            
+      let ret = findPropIn( propName, obj[prop] );            
+      if (ret !== undefined) {                
+        return ret;            
+      }        
+    }    
+  }
+}
+</code></pre>
+</section>
+
+---
+
+## `Immediately Invoked Function Expression (IIFE)`
+<section>
+	<pre><code data-trim data-noescape>
+(function IIFE(){    
+  // an IIFE!
+})();
+</code></pre>
+</section>
+
+---
+
 ## `Function manipulation`
 <section>
 	<pre><code data-trim data-noescape>
@@ -116,6 +365,10 @@ var unary =
 ## `Identity function`
 * Coercion, default function as argument
 
+---
+
+## `Identity function`
+
 <section>
 	<pre><code data-trim data-noescape>
 function identity(v) {
@@ -136,10 +389,13 @@ var identity =
 ## `Constant function`
 * Represent value as a function as to send to other function expecting functions
 
+---
+
+## `Constant function`
 <section>
 	<pre><code data-trim data-noescape>
 function constant(v) {
-  return fucntion value() {
+  return function value() {
     return v
   }
 }
@@ -148,7 +404,9 @@ var constant =
   v =>
     () =>
       v
-  </code></pre>
+p1.then( foo ).then( () => p2 ).then( bar );
+p1.then( foo ).then( constant( p2 ) ).then( bar );
+</code></pre>
 </section>
 
 ---
@@ -162,7 +420,7 @@ function foo(x,y){
 function bar(fn) {
   fn([3, 9])
 }
-bar(foo)
+bar(foo)	// ??
   </code></pre>
 </section>
 
@@ -182,7 +440,7 @@ var spreadArgs=
     argsArr =>
       fn(...argsArr)
 
-bar(spreadArgs(foo))
+bar(spreadArgs(foo))	// 12
   </code></pre>
 </section>
 
@@ -205,7 +463,7 @@ var gatherArgs =
 function combine([v1, v2]) {
   return v1 + v2
 }
-[1,2,3,4,5].reduce(gatherArgs(combine))
+[1,2,3,4,5].reduce(gatherArgs(combine))		// 15
   </code></pre>
 </section>
 
@@ -216,20 +474,265 @@ function combine([v1, v2]) {
 
 ---
 
-## `Partial appled function`
+## `Examples`
 <section>
 	<pre><code data-trim data-noescape>
-	function partial(fn, presetArgs) {
-		return function partialApplied(...laterArgs) {
-			return fn(...presetArgs, ...laterArgs)
-		}
-	}
+function ajax(url,data,callback) {     // .. }
+</code></pre>
+</section>
 
-	var partial =
-		(fn, presetArgs) =>
-			(...laterArgs) =>
-				fn(...presetArgs, ...laterArgs)
-  </code></pre>
+---
+
+## `Partial applied function`
+<section>
+	<pre><code data-trim data-noescape>
+function partial(fn, ...presetArgs) {
+	return function partialApplied(...laterArgs) {
+		return fn(...presetArgs, ...laterArgs)
+	}
+}
+
+var partial =
+	(fn, ...presetArgs) =>
+		(...laterArgs) =>
+			fn(...presetArgs, ...laterArgs)
+</code></pre>
+</section>
+
+---
+
+## `Examples`
+<section>
+	<pre><code data-trim data-noescape>
+var getPerson = partial( ajax, "http://some.api/person" );
+var getOrder = partial( ajax, "http://some.api/order" );
+var getCurrentUser = partial( getPerson, { user: CURRENT_USER_ID } );
+
+function add(x,y) {    
+  return x + y;
+}
+[1,2,3,4,5].map( partial( add, 3 ) ); // [4,5,6,7,8]
+</code></pre>
+</section>
+
+---
+
+## `Reverse arguments`
+<section>
+	<pre><code data-trim data-noescape>
+function reverseArgs(fn) {    
+  return function argsReversed(...args){        
+    return fn( ...args.reverse() );    
+  };
+}
+var reverseArgs =    
+  fn =>        
+    (...args) =>            
+      fn( ...args.reverse() );
+</code></pre>
+</section>
+
+---
+
+## `Examples`
+<section>
+	<pre><code data-trim data-noescape>
+var cache = {};
+var cacheResult = reverseArgs(    
+  partial( reverseArgs( ajax ), function
+    onResult(obj){        
+      cache[obj.id] = obj;    
+    } )
+);
+
+cacheResult( "http://some.api/person", { user: CURRENT_USER_ID } );
+</code></pre>
+</section>
+
+---
+
+## `Partial right`
+<section>
+	<pre><code data-trim data-noescape>
+function partialRight(fn,...presetArgs) {    
+  return function partiallyApplied(...laterArgs){        
+    return fn( ...laterArgs, ...presetArgs );    
+  };
+}
+var partialRight =    
+  (fn,...presetArgs) =>        
+    (...laterArgs) =>            
+      fn( ...laterArgs, ...presetArgs );
+</code></pre>
+</section>
+
+---
+
+## `Examples`
+<section>
+	<pre><code data-trim data-noescape>
+function foo(x,y,z,...rest) {    
+  console.log( x, y, z, rest );
+}
+var f = partialRight( foo, "z:last" );
+f( 1, 2 );          // 1 2 "z:last" []
+f( 1 );             // 1 "z:last" undefined []
+f( 1, 2, 3 );       // 1 2 3 ["z:last"]
+f( 1, 2, 3, 4 );    // 1 2 3 [4,"z:last"]
+</code></pre>
+</section>
+
+---
+
+## `Currying`
+<section>
+	<pre><code data-trim data-noescape>
+curriedAjax( "http://some.api/person" )    
+  ( { user: CURRENT_USER_ID } )        
+    ( function foundUser(user){ ... } );
+</code></pre>
+</section>
+
+---
+
+## `curry function`
+<section>
+	<pre><code data-trim data-noescape>
+function curry(fn,arity = fn.length) {    
+  return (function nextCurried(prevArgs){        
+    return function curried(nextArg){
+      var args = [ ...prevArgs, nextArg ];            
+      if (args.length >= arity) {                
+        return fn( ...args );            
+      } else {                
+        return nextCurried( args );            
+      }        
+    };    
+  })( [] );
+}
+</code></pre>
+</section>
+
+---
+
+## `curry function`
+<section>
+	<pre><code data-trim data-noescape>
+var curry =    
+  (fn,arity = fn.length,nextCurried) =>        
+    (nextCurried = prevArgs =>
+      nextArg => {                
+        var args = [ ...prevArgs, nextArg ];                
+        if (args.length >= arity) {                    
+          return fn( ...args );                
+        } else {                    
+          return nextCurried( args );                
+        }            
+      }        
+  )( [] );
+</code></pre>
+</section>
+
+---
+
+## `Examples`
+<section>
+	<pre><code data-trim data-noescape>
+function sum(...nums) {    
+  var total = 0;    
+  for (let num of nums) {        
+    total += num;    
+  }    
+  return total;
+}
+sum( 1, 2, 3, 4, 5 );     // 15
+var curriedSum = curry( sum, 5 );
+curriedSum( 1 )( 2 )( 3 )( 4 )( 5 );
+</code></pre>
+</section>
+
+---
+
+## `Loose curry`
+<section>
+	<pre><code data-trim data-noescape>
+function looseCurry(fn,arity = fn.length) {    
+  return (function nextCurried(prevArgs){
+    return function curried(...nextArgs){            
+      var args = [ ...prevArgs, ...nextArgs ];            
+      if (args.length >= arity) {                
+        return fn( ...args );            
+      } else {                
+        return nextCurried( args );            
+      }        
+    };    
+  })( [] );
+}
+</code></pre>
+</section>
+
+---
+
+## `Examples`
+<section>
+	<pre><code data-trim data-noescape>
+var curriedSum = looseCurry( sum, 5 );
+curriedSum( 1 )( 2, 3 )( 4, 5 ); 
+</code></pre>
+</section>
+
+---
+
+## `Uncurry`
+<section>
+	<pre><code data-trim data-noescape>
+function uncurry(fn) {    
+  return function uncurried(...args){  
+    var ret = fn;        
+    for (let arg of args) {            
+      ret = ret( arg );        
+    }        
+    return ret;    
+  };
+}
+</code></pre>
+</section>
+
+---
+
+## `Uncurry`
+<section>
+	<pre><code data-trim data-noescape>
+var uncurry =    
+  fn =>        
+    (...args) => {            
+      var ret = fn;            
+      for (let arg of args) {
+        ret = ret( arg );            
+      }            
+      return ret;        
+    };
+</code></pre>
+</section>
+
+---
+
+## `Examples`
+<section>
+	<pre><code data-trim data-noescape>
+function sum(...nums) {    
+  var sum = 0;    
+  for (let num of nums) {        
+    sum += num;    
+  }    
+  return sum;
+}
+var curriedSum = curry( sum, 5 );
+var uncurriedSum = uncurry( curriedSum );
+curriedSum( 1 )( 2 )( 3 )( 4 )( 5 );        // 15
+uncurriedSum( 1, 2, 3, 4, 5 );    
+uncurriedSum( 1, 2, 3 )( 4 )( 5 );  
+</code></pre>
 </section>
 
 ---
@@ -246,7 +749,6 @@ function compose(...fns) {
     return result
   }
 }
-
 var compose =
   (...fns) =>
     result => {
@@ -261,9 +763,18 @@ var compose =
 
 ---
 
-## `Functions`
+## `Examples`
 <section>
 	<pre><code data-trim data-noescape>
+function skipShortWords(words) {    
+  var filteredWords = [];    
+  for (let word of words) {        
+    if (word.length > 4) {            
+      filteredWords.push( word );        
+    }    
+  }    
+  return filteredWords;
+}
 function words(str) {
   return String(str)
     .toLowerCase()
@@ -272,7 +783,14 @@ function words(str) {
         return /^[\w]+$/.test(v)
     })
 }
+</code></pre>
+</section>
 
+---
+
+## `Examples`
+<section>
+	<pre><code data-trim data-noescape>
 function unique(list) {
   var uniqueList = []
   for (let v of list) {
@@ -282,9 +800,136 @@ function unique(list) {
   }
   return uniqueList
 }
-
-var wordsUsed = compose(unique, words)
+var text = "To compose two functions together, pass the \
+  output of the first function call as the input of the \
+  second function call.";
+var biggerWords = compose( skipShortWords, unique, words );
+var wordsUsed = biggerWords(text);
+wordsUsed		// ["compose", "functions", "together", "output", "first", "function", "input", "second"]
   </code></pre>
+</section>
+
+---
+
+## `Partial application with compose`
+<section>
+	<pre><code data-trim data-noescape>
+var filterWords = partialRight( compose, unique, words );
+var biggerWords = filterWords( skipShortWords );
+biggerWords( text );
+</code></pre>
+</section>
+
+---
+
+## `Currying with compose`
+<section>
+	<pre><code data-trim data-noescape>
+var biggerWords = curry(reverseArgs(compose), 3)(words)(unique)(skipShortWords)
+biggerWords(text)
+</code></pre>
+</section>
+
+---
+
+## `Reduction of functions`
+<section>
+	<pre><code data-trim data-noescape>
+function compose(...fns) {    
+  return function composed(result){        
+    return [...fns].reverse().reduce( function
+      reducer(result,fn){            
+        return fn( result );        
+      }, result );    
+  };
+}
+var compose = (...fns) =>    
+  result =>        
+    [...fns].reverse().reduce(            
+      (result,fn) =>                
+        fn( result )            
+      , result        
+    );
+</code></pre>
+</section>
+
+---
+
+## `Outer composed function with multiple args`
+<section>
+	<pre><code data-trim data-noescape>
+function compose(...fns) {    
+  return fns.reverse().reduce(
+    function reducer(fn1,fn2){
+      return function composed(...args){            
+        return fn2( fn1( ...args ) );        
+      };    
+    } );
+}
+var compose =    
+  (...fns) =>        
+    fns.reverse().reduce( (fn1,fn2) =>            
+      (...args) =>                
+        fn2( fn1( ...args ) )        
+    );
+</code></pre>
+</section>
+
+---
+
+## `Compose with recursion`
+<section>
+	<pre><code data-trim data-noescape>
+function compose(...fns) {    
+  // pull off the last two arguments    
+  var [ fn1, fn2, ...rest ] = fns.reverse();
+  var composedFn = function composed(...args){        
+    return fn2( fn1( ...args ) );    
+  };    
+  if (rest.length == 0) return composedFn;    
+  return compose( ...rest.reverse(), composedFn );
+}
+var compose =    
+  (...fns) => {        
+    // pull off the last two arguments
+    var [ fn1, fn2, ...rest ] = fns.reverse();        
+    var composedFn =            
+      (...args) =>                
+        fn2( fn1( ...args ) );        
+    if (rest.length == 0) return composedFn;        
+    return compose( ...rest.reverse(), composedFn );    
+  };
+</code></pre>
+</section>
+
+---
+
+## `Pipe`
+<section>
+	<pre><code data-trim data-noescape>
+function pipe(...fns) {    
+  return function piped(result){        
+    var list = [...fns];        
+    while (list.length > 0) {            
+      // take the first function from the list            
+      // and execute it            
+      result = list.shift()( result );
+    }        
+    return result;    
+  };
+}
+var pipe = reverseArgs( compose );
+</code></pre>
+</section>
+
+---
+
+## `Examples`
+<section>
+	<pre><code data-trim data-noescape>
+var biggerWords = pipe( words, unique, skipShortWords );
+biggerWords(text)
+</code></pre>
 </section>
 
 ---
